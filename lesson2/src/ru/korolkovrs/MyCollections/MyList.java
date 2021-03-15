@@ -6,7 +6,7 @@ public interface MyList<T> {
     int indexOf(T item);
     int size();
     boolean remove(T item);
-    boolean remove(int index);
+    T remove(int index);
     T get(int index);
     void set(int index, T item);
 }
