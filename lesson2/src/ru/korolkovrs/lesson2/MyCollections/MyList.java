@@ -1,4 +1,4 @@
-package ru.korolkovrs.MyCollections;
+package ru.korolkovrs.lesson2.MyCollections;
 
 public interface MyList<T> {
     void add(T item);

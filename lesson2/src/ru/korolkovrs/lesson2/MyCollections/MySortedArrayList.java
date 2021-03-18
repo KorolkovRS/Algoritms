@@ -1,4 +1,4 @@
-package ru.korolkovrs.MyCollections;
+package ru.korolkovrs.lesson2.MyCollections;
 
 
 public class MySortedArrayList<T extends Comparable<T>> extends MyArrayList<T>{
