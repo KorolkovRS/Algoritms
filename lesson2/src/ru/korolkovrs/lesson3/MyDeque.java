@@ -1,11 +1,11 @@
 package ru.korolkovrs.lesson3;
 
-import java.util.EmptyStackException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MyDequeue<T> {
+public class MyDeque<T> {
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private final static int DEFAULT_CAPACITY = 10;
@@ -17,7 +17,7 @@ public class MyDequeue<T> {
     private int begin;
     private int end;
 
-    public MyDequeue(int capacity) {
+    public MyDeque(int capacity) {
         if (capacity <= 0) {
             capacity = DEFAULT_CAPACITY;
             logger.log(Level.WARNING, "Error creating a stack with size= " + capacity + ". The default value is used.");
@@ -26,7 +26,7 @@ public class MyDequeue<T> {
         list = (T[]) new Object[capacity];
     }
 
-    public MyDequeue() {
+    public MyDeque() {
         this(DEFAULT_CAPACITY);
     }
 
@@ -36,28 +36,52 @@ public class MyDequeue<T> {
      * @param item добавляемый элемент
      * @throws IllegalStateException если очередь полная
      */
-    public void insert(T item) throws IllegalStateException {
+    public void addFirst(T item) {
         if (isFull()) {
-            reCapacity();
-            throw new IllegalStateException("Очередь заполнена");
+            allocateNewList();
         }
         size++;
         list[end] = item;
         end = nextIndex(end);
     }
 
-    public T peekFront() {
+    public void addLast(T item) {
+        if (isFull()) {
+            allocateNewList();
+        }
+        begin = lastIndex(begin);
+        list[begin] = item;
+        size++;
+
+    }
+
+    public T peekFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
         return list[begin];
     }
 
-    public T remove() {
-        T temp = peekFront();
+    public T peekLast() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return list[end - 1];
+    }
+
+    public T removeFirst() {
+        T temp = peekFirst();
         size--;
         list[begin] = null;
         begin = nextIndex(begin);
+        return temp;
+    }
+
+    public T removeLast() {
+        T temp = peekLast();
+        end = lastIndex(end);
+        size--;
+        list[end] = null;
         return temp;
     }
 
@@ -78,6 +102,36 @@ public class MyDequeue<T> {
         return (index + 1) % list.length;
     }
 
+    private int lastIndex(int index) {
+        int i = index - 1;
+
+        return (i >= 0) ? i : (list.length - 1);
+    }
+
+    private void allocateNewList() {
+//        int temp = capacity + begin;
+//        end = capacity;
+//        capacity *= RISING_FACTOR;
+//        T[] newList = (T[]) new Object[capacity];
+//
+//        for (int i = begin, j = 0; i < temp ; i++, j++) {
+//            newList[j] = list[nextIndex(i - 1)];
+//        }
+//        list = newList;
+//        begin = 0;
+
+        end = capacity;
+        capacity *= RISING_FACTOR;
+        T[] newList = (T[]) new Object[capacity];
+
+        for (int i = begin, j = 0; j < end; i = nextIndex(i), j++) {
+            newList[j] = list[i];
+        }
+
+        list = newList;
+        begin = 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[ ");
@@ -91,11 +145,5 @@ public class MyDequeue<T> {
         }
         sb.append(" ]");
         return sb.toString();
-    }
-
-    private void reCapacity() {
-        int temp = capacity;
-        capacity *= RISING_FACTOR;
-        T[] newList = (T[]) new Object[capacity];
     }
 }
