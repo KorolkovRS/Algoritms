@@ -3,7 +3,7 @@ package ru.korolkovrs.MyCollections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MyArrayList<T> implements MyList<T> {
+public class MyArrayList<T extends Comparable> implements MyList<T> {
     static Logger logger = Logger.getLogger(Logger.getGlobal().getName());
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -16,7 +16,7 @@ public class MyArrayList<T> implements MyList<T> {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity <= 0: " + capacity);
         }
-        list = (T[]) new Object[capacity];
+        list = (T[]) new Comparable[capacity];
         this.capacity = capacity;
     }
 
@@ -105,7 +105,7 @@ public class MyArrayList<T> implements MyList<T> {
     private void expandArray() {
         if (size >= capacity) {
             capacity *= RISING_FACTOR;
-            T[] newList = (T[]) new Object[capacity];
+            T[] newList = (T[]) new Comparable[capacity];
             for (int i = 0; i < size; i++) {
                 newList[i] = list[i];
             }
@@ -118,5 +118,74 @@ public class MyArrayList<T> implements MyList<T> {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + (size));
         }
+    }
+
+    public void bubbleSort() {
+        Long start = System.currentTimeMillis();
+        Long count = 0L;
+        boolean isSorted;
+        for (int i = size - 1; i > 0; i--) {
+            isSorted = true;
+            for (int j = 0; j < i; j++) {
+                if (list[j].compareTo(list[j + 1]) > 0) {
+                    swap(j, j + 1);
+                    isSorted = false;
+                }
+//                count++;
+            }
+            if (isSorted) {
+                break;
+            }
+        }
+        Long end = System.currentTimeMillis();
+        Long time = end - start;
+        logger.log(Level.INFO, String.format("Method: BubbleSort, running time: %d ms," +
+                " number of iteration: %d", time, count));
+    }
+
+    public void selectSort() {
+        Long start = System.currentTimeMillis();
+        Long count = 0L;
+        int min;
+        for (int i = 0; i < size - 1; i++) {
+            min = i;
+            for (int j = i + 1; j < size; j++) {
+                if (list[min].compareTo(list[j]) > 0 ) {
+                    min = j;
+                }
+//                count++;
+            }
+            swap(i, min);
+        }
+        Long end = System.currentTimeMillis();
+        Long time = end - start;
+        logger.log(Level.INFO, String.format("Method: SelectSort, running time: %d ms," +
+                " number of iteration: %d", time, count));
+    }
+
+    public void insertSort() {
+        Long start = System.currentTimeMillis();
+        Long count = 0L;
+        T obj;
+        for (int i = 1; i < size; i++) {
+            obj = list[i];
+            int j = i;
+            while (j > 0 && obj.compareTo(list[j - 1]) < 0) {
+                list[j] = list[j - 1];
+                j--;
+//                count++;
+            }
+            list[j] = obj;
+        }
+        Long end = System.currentTimeMillis();
+        Long time = end - start;
+        logger.log(Level.INFO, String.format("Method: InsertSort, running time: %d ms," +
+                " number of iteration: %d", time, count));
+    }
+
+    private void swap(int first, int second) {
+        T temp = list[second];
+        list[second] = list[first];
+        list[first] = temp;
     }
 }

@@ -2,34 +2,28 @@ package ru.korolkovrs;
 
 import ru.korolkovrs.MyCollections.MyArrayList;
 import ru.korolkovrs.MyCollections.MyList;
-import ru.korolkovrs.MyCollections.MySortedArrayList;
 
-import java.util.List;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
+        MyList<Integer> list;
+
+        list = init();
+        ((MyArrayList<Integer>) list).bubbleSort();
+        list = init();
+        ((MyArrayList<Integer>) list).selectSort();
+        list = init();
+        ((MyArrayList<Integer>) list).insertSort();
+    }
+
+    private static MyList<Integer> init() {
         Random r = new Random();
-        int size = 10;
-
-//        MyList<Integer> list = new MyArrayList<>();
-//        System.out.println(list);
-//        for (int i = 0; i < size; i++) {
-//            list.add(r.nextInt(100));
-//        }
-
-        MyList<Integer> list = new MySortedArrayList<>();
-        System.out.println(list);
+        int size = 100000;
+        MyList<Integer> list = new MyArrayList<>();
         for (int i = 0; i < size; i++) {
-//            list.add(r.nextInt(10));
-            list.add(i);
+            list.add(r.nextInt());
         }
-
-        System.out.println(list);
-        System.out.println(list.indexOf((Integer) 9));
-//        list.add(10,5);
-//        list.add( 5);
-//        list.add( -6);
-//        System.out.println(list);
+        return list;
     }
 }
