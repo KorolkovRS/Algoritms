@@ -1,11 +1,13 @@
 package ru.korolkovrs.lesson3;
 
+import ru.korolkovrs.MyCollections.Deque;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MyDeque<T> {
+public class MyDeque<T> implements Deque<T> {
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private final static int DEFAULT_CAPACITY = 10;
@@ -36,6 +38,7 @@ public class MyDeque<T> {
      * @param item добавляемый элемент
      * @throws IllegalStateException если очередь полная
      */
+    @Override
     public void addFirst(T item) {
         if (isFull()) {
             reCapacity();
@@ -45,6 +48,7 @@ public class MyDeque<T> {
         end = nextIndex(end);
     }
 
+    @Override
     public void addLast(T item) {
         if (isFull()) {
             reCapacity();
@@ -55,6 +59,7 @@ public class MyDeque<T> {
 
     }
 
+    @Override
     public T peekFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException();
@@ -62,6 +67,7 @@ public class MyDeque<T> {
         return list[begin];
     }
 
+    @Override
     public T peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException();
@@ -69,6 +75,7 @@ public class MyDeque<T> {
         return list[end - 1];
     }
 
+    @Override
     public T removeFirst() {
         T temp = peekFirst();
         size--;
@@ -77,6 +84,7 @@ public class MyDeque<T> {
         return temp;
     }
 
+    @Override
     public T removeLast() {
         T temp = peekLast();
         end = lastIndex(end);
@@ -85,15 +93,16 @@ public class MyDeque<T> {
         return temp;
     }
 
-
     public boolean isFull() {
         return size == list.length;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
